@@ -2,6 +2,11 @@ import React, { useState } from 'react';
 import { StyleSheet, Text, View, Image, TextInput, Button, Alert } from 'react-native';
 
 const Main = ({ navigation }) => {
+  state = {
+    correo:"",
+    pass:""
+  }
+
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
@@ -13,39 +18,53 @@ const Main = ({ navigation }) => {
     setPassword(inputText);
   };
 
-  const handleLogin = () => {
-    // Lógica para realizar el inicio de sesión
-    if (username === 'usuario' && password === 'contraseña') {
-      Alert.alert('Inicio de sesión exitoso');
-    } else {
-      Alert.alert('Error de inicio de sesión');
+  const handleLogin = async () => {
+    this.state.correo = username;
+    this.state.pass = password;
+
+    try {
+      const config = {
+        method:'POST',
+        body: JSON.stringify(this.state)
+      }
+
+      const res = await fetch("http://localhost:3000/api/arri");
+      const json = await res.json();
+      
+      console.log(json);
+    } catch (error) {
+      console.log(error);
     }
+
+    
+    // Lógica para realizar el inicio de sesión
+  
   };
 
-    return (
-      <View style={styles.container}>
-        <Image source={require('../img/logo.png')} style={styles.img}/>
-        <View style={styles.seccion}>
-          <Text style={styles.textos}>Correo</Text>
-          <TextInput style={styles.inputs}
-            value={username}
-            onChangeText={handleUsernameChange}
-            placeholder="Ingrese su correo"
-          />
-          <Text style={styles.textos}>Contraseña</Text>
-          <TextInput style={styles.inputs}
-            value={password}
-            onChangeText={handlePasswordChange}
-            placeholder="Ingrese su contraseña"
-            secureTextEntry={true}
-          />
-        </View>
-        <Button title="Enviar" onPress={handleLogin}/>
-        <View style={styles.espacio}></View>
-        <Button title="Registrarse" onPress={() => navigation.navigate('Register')}/>
+  return (
+    <View style={styles.container}>
+      <Image source={require('../img/logo.png')} style={styles.img}/>
+      <View style={styles.seccion}>
+        <Text style={styles.textos}>Correo</Text>
+        <TextInput style={styles.inputs}
+          value={username}
+          onChangeText={handleUsernameChange}
+          placeholder="Ingrese su correo"
+        />
+        <Text style={styles.textos}>Contraseña</Text>
+        <TextInput style={styles.inputs}
+          value={password}
+          onChangeText={handlePasswordChange}
+          placeholder="Ingrese su contraseña"
+          secureTextEntry={true}
+        />
       </View>
-    );
-  }
+      <Button title="Enviar" onPress={handleLogin}/>
+      <View style={styles.espacio}></View>
+      <Button title="Registrarse" onPress={() => navigation.navigate('Register')}/>
+    </View>
+  );
+}
   
   const styles = StyleSheet.create({
     container: {
