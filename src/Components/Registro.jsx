@@ -2,8 +2,13 @@ import React, { useState } from 'react';
 import { StyleSheet, Text, View, Image, TextInput, Button, Alert } from 'react-native';
 
 const Main =({ navigation }) => {
+  const [name, setName] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+
+  const handleNameChange = (inputText) => {
+    setName(inputText);
+  };
 
   const handleUsernameChange = (inputText) => {
     setUsername(inputText);
@@ -13,10 +18,48 @@ const Main =({ navigation }) => {
     setPassword(inputText);
   };
 
+  const handleRegister = async () => {
+    const url = 'http://192.168.1.2:3000/api/arri/register';
+    //const url = 'http://165.22.189.59:8001/api/login';
+    //const url = 'https://pokeapi.co/api/v2/pokemon/ditto'
+    const state = {
+      nombre:name,
+      correo:username,
+      contraseña:password,
+    }
+
+    try {
+      const config = {
+        method:'POST',
+        headers:{
+          'Accept':'application/json',
+          'Content-Type':'application/json'
+        },
+        body: JSON.stringify(state)
+      }
+
+      const response = await fetch(url,config);
+      const json = await response.json(); 
+      console.log(json);
+
+      navigation.navigate('Login');
+    } catch (error) {
+      console.log(error);
+    }
+
+    // Lógica para realizar el inicio de sesión
+  };
+
   return (
     <View style={styles.container}>
       <Image source={require('../img/logo.png')} style={styles.img}/>
       <View style={styles.seccion}>
+        <Text style={styles.textos}>Nombre</Text>
+        <TextInput style={styles.inputs}
+          value={name}
+          onChangeText={handleNameChange}
+          placeholder="Ingrese su nombre"
+        />
         <Text style={styles.textos}>Correo</Text>
         <TextInput style={styles.inputs}
           value={username}
@@ -38,7 +81,7 @@ const Main =({ navigation }) => {
           secureTextEntry={true}
         />
       </View>
-      <Button title="Registrar" onPress={() => navigation.navigate('Login')}/>
+      <Button title="Registrar" onPress={handleRegister}/>
     </View>
   );
   }

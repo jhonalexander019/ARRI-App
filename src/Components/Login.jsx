@@ -2,11 +2,6 @@ import React, { useState } from 'react';
 import { StyleSheet, Text, View, Image, TextInput, Button, Alert } from 'react-native';
 
 const Main = ({ navigation }) => {
-  state = {
-    correo:"",
-    pass:""
-  }
-
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
@@ -19,26 +14,32 @@ const Main = ({ navigation }) => {
   };
 
   const handleLogin = async () => {
-    this.state.correo = username;
-    this.state.pass = password;
+    const url = 'http://192.168.1.2:3000/api/arri/login';
+    //const url = 'http://165.22.189.59:8001/api/login';
+    //const url = 'https://pokeapi.co/api/v2/pokemon/ditto'
+    const state = {
+      correo:username,
+      contraseña:password,
+    }
 
     try {
       const config = {
         method:'POST',
-        body: JSON.stringify(this.state)
+        headers:{
+          'Accept':'application/json',
+          'Content-Type':'application/json'
+        },
+        body: JSON.stringify(state)
       }
 
-      const res = await fetch("http://localhost:3000/api/arri");
-      const json = await res.json();
-      
+      const response = await fetch(url,config);
+      const json = await response.json(); 
       console.log(json);
     } catch (error) {
       console.log(error);
     }
 
-    
     // Lógica para realizar el inicio de sesión
-  
   };
 
   return (
